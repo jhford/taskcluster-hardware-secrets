@@ -3,16 +3,20 @@ defaults:
   app:
     # Prefix for exchanges, should always be v1/
     exchangePrefix: v1/
+    publishMetaData: false
+  azure:
+    account: jungle
+    secretsTableName: 'HardwareSecretsDev'
 
   # taskcluster credentials the service should use
   taskcluster:
-    xxxBaseUrl:       '...' # BaseUrl for xxx service, overwriting can be useful
+    authBaseUrl:      https://auth.taskcluster.net/v1
     credentials:      # Load strings from environment variables
       clientId:       !env TASKCLUSTER_CLIENT_ID
       accessToken:    !env TASKCLUSTER_ACCESS_TOKEN
   # Configuration for server
   server:
-    publicUrl:                https://auth.taskcluster.net
+    publicUrl:                https://hardware-secrets.taskcluster.net
     port:                     !env:number PORT
     env:                      !env NODE_ENV
     forceSSL:                 !env:bool FORCE_SSL
@@ -28,14 +32,25 @@ defaults:
     region:                   'us-west-2'
     apiVersion:               '2014-01-01'
 
+development:
+  server:
+    forceSSL: false
+    trustProxy: true
+
 production:
   # overwrite defaults for production
   server:
     forceSSL:                 true
     trustProxy:               true
     env:                      'production'
+  azure:
+    account: jungle
+    secretsTableName: 'HardwareSecrets'
 
 test:
   # overwrite defaults for test
   server:
     env:                      'development'
+  azure:
+    account: jungle
+    secretsTableName: 'HardwareSecretsTest'
