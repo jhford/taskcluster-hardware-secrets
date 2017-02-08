@@ -16,7 +16,7 @@ let load = loader({
   monitor: {
     requires: ['process', 'profile', 'cfg'],
     setup: ({process, profile, cfg}) => monitor({
-      project: 'hardware-secrets',
+      project: 'host-secrets',
       credentials: cfg.taskcluster.credentials,
       mock: profile !== 'production',
       process,
@@ -27,7 +27,7 @@ let load = loader({
     requires: ['cfg'],
     setup: async ({cfg}) => {
       return await validator({
-        prefix: 'hardware-secrets/v1/',
+        prefix: 'host-secrets/v1/',
         aws: cfg.aws,
       });
     },
@@ -56,7 +56,7 @@ let load = loader({
         authBaseUrl: cfg.taskcluster.authBaseUrl,
         publish: cfg.app.publishMetaData,
         baseUrl: cfg.server.publicUrl + '/v1',
-        referencePrefix: 'hardware-secrets/v1/api.json',
+        referencePrefix: 'host-secrets/v1/api.json',
         monitor: monitor.prefix('api'),
       });
 

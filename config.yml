@@ -19,7 +19,7 @@ defaults:
 
   # Configuration for server
   server:
-    publicUrl:                "https://hardware-secrets.taskcluster.net"
+    publicUrl:                "https://host-secrets.taskcluster.net"
     port:                     !env:number PORT
     env:                      !env NODE_ENV
     forceSSL:                 !env:bool FORCE_SSL

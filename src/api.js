@@ -1,5 +1,5 @@
 let API = require('taskcluster-lib-api');
-let debug = require('debug')('hardware-secrets:api');
+let debug = require('debug')('host-secrets:api');
 let assert = require('assert');
 let _ = require('lodash');
 let taskcluster = require('taskcluster-client');
@@ -8,7 +8,7 @@ let dns = require('mz/dns');
 let api = new API({
   title: 'Hardware Secrets',
   description: 'Write this, sucka!',
-  schemaPrefix: 'http://schemas.taskcluster.net/hardware-secrets/v1/',
+  schemaPrefix: 'http://schemas.taskcluster.net/host-secrets/v1/',
 });
 
 function isIpAllowed(ip, allowedIps) {
@@ -21,7 +21,7 @@ api.declare({
   name: 'credentials',
   input: undefined, // For now
   output: undefined, // For now
-  title: 'Reteive a hardware secret',
+  title: 'Reteive a host secret',
   description: 'Generate a set of temporary credentials',
   stability:  API.stability.experimental,
 }, async function (req, res) {

@@ -1,5 +1,5 @@
 {
-  "name": "taskcluster-hardware-secrets",
+  "name": "taskcluster-host-secrets",
   "version": "1.0.0",
   "dependencies": {
     "ajv": {
