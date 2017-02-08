@@ -6,8 +6,8 @@ let taskcluster = require('taskcluster-client');
 let dns = require('mz/dns');
 
 let api = new API({
-  title: 'Hardware Secrets',
-  description: 'Write this, sucka!',
+  title: 'Host Secrets',
+  description: 'Get Taskcluster credentials based on IP address',
   schemaPrefix: 'http://schemas.taskcluster.net/host-secrets/v1/',
 });
 
@@ -21,7 +21,7 @@ api.declare({
   name: 'credentials',
   input: undefined, // For now
   output: undefined, // For now
-  title: 'Reteive a host secret',
+  title: 'Retreive a temporary taskcluster credential',
   description: 'Generate a set of temporary credentials',
   stability:  API.stability.experimental,
 }, async function (req, res) {
