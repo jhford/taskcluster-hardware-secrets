@@ -1,5 +1,4 @@
 let _ = require('lodash');
-let _Secret = require('./data').Secret;
 
 let loader = require('taskcluster-lib-loader');
 let config = require('typed-env-config');
@@ -43,24 +42,15 @@ let load = loader({
     },
   },
 
-  Secret: {
-    requires: ['cfg'],
-    setup: async ({cfg}) => {
-      let Secret = _Secret.setup({
-        account: cfg.azure.account,
-        table: cfg.azure.secretsTableName,
-        credentials: cfg.taskcluster.credentials,
-      });
-      return Secret;
-    },
-  },
-
   api: {
-    requires: ['cfg', 'validator', 'monitor', 'Secret'],
-    setup: async ({cfg, validator, monitor, Secret}) => {
+    requires: ['cfg', 'validator', 'monitor'],
+    setup: async ({cfg, validator, monitor}) => {
       let router = await api.setup({
         context: {
-          Secret: Secret,
+          credentials: cfg.taskcluster.credentials,
+          scopeBase: cfg.taskcluster.scopeBase,
+          credentialsExpire: cfg.taskcluster.credentialsExpire,
+          allowed: cfg.taskcluster.allowedIps.split(',').map(x => x.trim()),
         },
         validator: validator,
         authBaseUrl: cfg.taskcluster.authBaseUrl,

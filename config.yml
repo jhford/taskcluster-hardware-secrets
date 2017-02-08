@@ -4,53 +4,46 @@ defaults:
     # Prefix for exchanges, should always be v1/
     exchangePrefix: v1/
     publishMetaData: false
-  azure:
-    account: jungle
-    secretsTableName: 'HardwareSecretsDev'
 
   # taskcluster credentials the service should use
+  # NOTE: These credentials are where the temporary credentials are derived
+  # from.  These are credentials to do things like monitor the service, etc
   taskcluster:
     authBaseUrl:      https://auth.taskcluster.net/v1
+    scopeBase: !env TASKCLUSTER_SCOPE_BASE
+    credentialExpires: !env TASKCLUSTER_CREDENTIALS_EXPIRE
+    allowedIps: !env TASKCLUSTER_ALLOWED_IPS
     credentials:      # Load strings from environment variables
       clientId:       !env TASKCLUSTER_CLIENT_ID
       accessToken:    !env TASKCLUSTER_ACCESS_TOKEN
+
   # Configuration for server
   server:
-    publicUrl:                https://hardware-secrets.taskcluster.net
+    publicUrl:                "https://hardware-secrets.taskcluster.net"
     port:                     !env:number PORT
     env:                      !env NODE_ENV
     forceSSL:                 !env:bool FORCE_SSL
     trustProxy:               !env:bool TRUST_PROXY
-  # Pulse credentials
-  pulse:
-    username:                 !env PULSE_USERNAME
-    password:                 !env PULSE_PASSWORD
-  # AWS credentials, if needed
-  aws:
-    accessKeyId:              !env AWS_ACCESS_KEY_ID
-    secretAccessKey:          !env AWS_SECRET_ACCESS_KEY
-    region:                   'us-west-2'
-    apiVersion:               '2014-01-01'
 
 development:
+  taskcluster:
+    scopeBase: "assume:project:testing-host-secrets:host:"
+    credentialExpires: 1 day
+    allowedIps: '*'
   server:
     forceSSL: false
     trustProxy: true
 
 production:
+  # We don't publish metadata because this service will be deployed in multiple
+  # places and don't want to confuse things
   # overwrite defaults for production
   server:
     forceSSL:                 true
     trustProxy:               true
     env:                      'production'
-  azure:
-    account: jungle
-    secretsTableName: 'HardwareSecrets'
 
 test:
   # overwrite defaults for test
   server:
     env:                      'development'
-  azure:
-    account: jungle
-    secretsTableName: 'HardwareSecretsTest'
