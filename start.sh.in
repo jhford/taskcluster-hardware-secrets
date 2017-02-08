@@ -1,0 +1,70 @@
+#!/bin/bash
+
+NODE_BIN="<<<NODE_BINARY>>>"
+
+scope_base=${TASKCLUSTER_SCOPE_BASE}
+expires=${TASKCLUSTER_CREDENTIALS_EXPIRE}
+allowed_ips=${TASKCLUSTER_ALLOWED_IPS}
+clientid=${TASKCLUSTER_CLIENT_ID}
+token=${TASKCLUSTER_ACCESS_TOKEN}
+port=${PORT}
+env=${NODE_ENV:-production}
+
+while [ $# -gt 0 ] ; do
+  case $1 in 
+    --scope-base)
+      scope_base=$2
+      shift 2
+      ;;
+    --expires)
+      expires=$2
+      shift 2
+      ;;
+    --allowed-ips)
+      allowed_ips=$2
+      shift 2
+      ;;
+    --client-id)
+      clientid=$2
+      shift 2
+      ;;
+    --token)
+      token=$2
+      shift 2
+      ;;
+    --port)
+      port=$2
+      shift 2
+      ;;
+    --env)
+      env=$2
+      shift 2
+      ;;
+  esac
+done
+
+misarg () {
+  echo Required Option $1 is not provided
+  exit 1
+}
+
+test "$scope_base" || misarg --scope-base
+test "$expires" || misarg --expires
+test "$allowed_ips" || misarg --allowed-ips
+test "$clientid" || misarg --client-id
+test "$token" || misarg --token
+test "$port" || misarg --port
+test "$env" || misarg --env
+
+export DEBUG="* -aws -babel -superagent -nock* -base:validator -eslint* -express:* -mocha:* -nock:* -body-parse:* -azure:*"
+export TASKCLUSTER_SCOPE_BASE=$scope_base
+export TASKCLUSTER_CREDENTIALS_EXPIRE=$expires
+export TASKCLUSTER_ALLOWED_IPS=$allowed_ips
+export TASKCLUSTER_CLIENT_ID=$clientid
+export TASKCLUSTER_ACCESS_TOKEN=$token
+export PORT=$port
+export NODE_ENV=$env
+
+exec $NODE_BIN lib/main server
+
+

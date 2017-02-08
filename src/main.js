@@ -45,12 +45,16 @@ let load = loader({
   api: {
     requires: ['cfg', 'validator', 'monitor'],
     setup: async ({cfg, validator, monitor}) => {
+      let allowedIps = cfg.taskcluster.allowedIps;
+      if (allowedIps.includes(',')) {
+          allowedIps = allowedIps.split(',').map(x => x.trim());
+      }
       let router = await api.setup({
         context: {
           credentials: cfg.taskcluster.credentials,
           scopeBase: cfg.taskcluster.scopeBase,
           credentialsExpire: cfg.taskcluster.credentialsExpire,
-          allowed: cfg.taskcluster.allowedIps.split(',').map(x => x.trim()),
+          allowed: allowedIps,
         },
         validator: validator,
         authBaseUrl: cfg.taskcluster.authBaseUrl,
