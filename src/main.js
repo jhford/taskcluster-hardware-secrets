@@ -6,6 +6,7 @@ let validator = require('taskcluster-lib-validate');
 let monitor = require('taskcluster-lib-monitor');
 let api = require('./api'); 
 let App = require('taskcluster-lib-app');
+let ip2name = require('./ip2name');
 
 let load = loader({
   cfg: {
@@ -42,9 +43,14 @@ let load = loader({
     },
   },
 
+  ip2name: {
+    requires: [],
+    setup: () => ip2name,
+  },
+
   api: {
-    requires: ['cfg', 'validator', 'monitor'],
-    setup: async ({cfg, validator, monitor}) => {
+    requires: ['cfg', 'validator', 'monitor', 'ip2name'],
+    setup: async ({cfg, validator, monitor, ip2name}) => {
       let allowedIps = cfg.taskcluster.allowedIps;
       if (allowedIps.includes(',')) {
           allowedIps = allowedIps.split(',').map(x => x.trim());
@@ -54,7 +60,8 @@ let load = loader({
           credentials: cfg.taskcluster.credentials,
           scopeBase: cfg.taskcluster.scopeBase,
           credentialsExpire: cfg.taskcluster.credentialsExpire,
-          allowed: allowedIps,
+          allowedIps,
+          ip2name,
         },
         validator: validator,
         authBaseUrl: cfg.taskcluster.authBaseUrl,

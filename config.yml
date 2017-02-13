@@ -11,7 +11,7 @@ defaults:
   taskcluster:
     authBaseUrl:      https://auth.taskcluster.net/v1
     scopeBase: !env TASKCLUSTER_SCOPE_BASE
-    credentialExpires: !env TASKCLUSTER_CREDENTIALS_EXPIRE
+    credentialsExpire: !env TASKCLUSTER_CREDENTIALS_EXPIRE
     allowedIps: !env TASKCLUSTER_ALLOWED_IPS
     credentials:      # Load strings from environment variables
       clientId:       !env TASKCLUSTER_CLIENT_ID
@@ -28,11 +28,12 @@ defaults:
 development:
   taskcluster:
     scopeBase: "assume:project:testing-host-secrets:host:"
-    credentialExpires: 1 day
+    credentialsExpire: 1 day
     allowedIps: '*'
   server:
     forceSSL: false
     trustProxy: true
+    port: 60401
 
 production:
   # We don't publish metadata because this service will be deployed in multiple
@@ -45,5 +46,16 @@ production:
 
 test:
   # overwrite defaults for test
+  taskcluster:
+    allowedIps: 1.1.1.1
+    scopeBase: 'assume:project:releng:host:'
+    credentialsExpire: '12 hours'
+    credentials:
+      clientId:       'fake-client-id'
+      accessToken:    'fake-access-token'
   server:
-    env:                      'development'
+    port:             60401
+    publicUrl:        'http://localhost:60401'
+    env:              development
+    forceSSL:         false
+    trustProxy:       true

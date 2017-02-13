@@ -3,12 +3,22 @@ let debug = require('debug')('host-secrets:api');
 let assert = require('assert');
 let _ = require('lodash');
 let taskcluster = require('taskcluster-client');
-let dns = require('mz/dns');
+let ip2name = require('./ip2name');
 
 let api = new API({
   title: 'Host Secrets',
   description: 'Get Taskcluster credentials based on IP address',
   schemaPrefix: 'http://schemas.taskcluster.net/host-secrets/v1/',
+  context: [
+    'allowedIps',
+    'scopeBase',
+    'credentialsExpire',
+    'credentials',
+    'ip2name',
+  ],
+  errorCodes: {
+    IPNotAllowed: 403,
+  },
 });
 
 function isIpAllowed(ip, allowedIps) {
@@ -27,36 +37,34 @@ api.declare({
 }, async function (req, res) {
   let ip = req.ip;
   debug(`${ip} is asking for credentials`);
-  let dnsNames = await dns.reverse(ip);
-  console.dir(dnsNames);
-  if (isIpAllowed(ip, this.allowedIps)) {
-    let start = new Date();
-    let scopes = dnsNames.filter(name => {
-      // Because wildcards could be used to escalate scopes, we're going to ignore dns names which contain
-      // that character
-      return name.indexOf('*') === -1;
-    }).map(name => {
-      let chunks = name.split('.');
-      chunks.reverse();
-      return this.scopeBase + chunks.join('.');
-    });
-    let tempCred = taskcluster.createTemporaryCredentials({
-      //clientId: <authenticated dns name of machine?>
-      clientId: dnsNames[0],
-      start: start,
-      expiry: taskcluster.fromNow(this.credentialsExpire, start),
-      scopes: scopes,
-      credentials: this.credentials,
-    });
-    debug(`${ip} receives credentials`);
-    res.reply({credentials: tempCred});
-  } else {
-    debug(`${ip} is forbidden`);
-    res.status(403).reply({
-      message: 'Forbidden',
-      code: 'Forbidden',
-    });
+
+  if (!isIpAllowed(ip, this.allowedIps)) {
+    return res.reportError('IPNotAllowed', 'Remote IP not allowed', {});
   }
+
+  let hostname;
+  try {
+    hostname = await this.ip2name(ip);
+  } catch (err) {
+    debug(`From ip2name: ${err}`);
+    return res.reportError('IPNotAllowed', 'Remote IP not allowed', {});
+  }
+  debug(`${ip} translates to ${hostname}`);
+
+  let labels = hostname.split('.');
+  labels.reverse();
+  let scopes = [this.scopeBase + labels.join('.')];
+  let start = new Date();
+  let tempCred = taskcluster.createTemporaryCredentials({
+    //clientId: <authenticated dns name of machine?>
+    clientId: hostname,
+    start,
+    expiry: taskcluster.fromNow(this.credentialsExpire, start),
+    scopes: scopes,
+    credentials: this.credentials,
+  });
+  debug(`${ip} receives credentials with scopes ${scopes}`);
+  res.reply({credentials: tempCred});
 });
 
 module.exports = api;

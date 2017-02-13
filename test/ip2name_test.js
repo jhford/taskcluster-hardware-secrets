@@ -2,6 +2,7 @@ import 'mocha';
 import assert from 'assert';
 import ip2name from '../lib/ip2name';
 import dns from 'mz/dns';
+import helper from './helper';
 
 suite("ip2name", function() {
 
@@ -47,18 +48,6 @@ suite("ip2name", function() {
       reverse = {};
     });
 
-    const assertRejects = async (fn, error) => {
-      try {
-        await fn();
-      } catch (err) {
-        if (error.test(err)) {
-          return;
-        }
-        throw err;
-      }
-      throw new Error("Did not reject");
-    };
-
     test("success", async function() {
       reverse['1.1.1.1'] = ['a.domain.name'];
       forward['a.domain.name'] = ['1.1.1.1'];
@@ -67,14 +56,14 @@ suite("ip2name", function() {
 
     test("too many hostnames for IP", async function() {
       reverse['1.1.1.1'] = ['a.domain.name', 'b.domain.name'];
-      await assertRejects(async () => {
+      await helper.assertRejects(async () => {
         await ip2name('1.1.1.1');
       }, /Several hostnames found for 1.1.1.1/);
     });
 
     test("no hostname for IP", async function() {
       reverse['1.1.1.1'] = [];
-      await assertRejects(async () => {
+      await helper.assertRejects(async () => {
         await ip2name('1.1.1.1');
       }, /No hostnames found for 1.1.1.1/);
     });
@@ -82,7 +71,7 @@ suite("ip2name", function() {
     test("too many IPs for hostname", async function() {
       reverse['1.1.1.1'] = ['a.domain.name'];
       forward['a.domain.name'] = ['1.1.1.1', '2.2.2.2'];
-      await assertRejects(async () => {
+      await helper.assertRejects(async () => {
         await ip2name('1.1.1.1');
       }, /Hostname for 1.1.1.1 maps back to several IPs/);
     });
@@ -90,7 +79,7 @@ suite("ip2name", function() {
     test("no IPs for hostname", async function() {
       reverse['1.1.1.1'] = ['a.domain.name'];
       forward['a.domain.name'] = [];
-      await assertRejects(async () => {
+      await helper.assertRejects(async () => {
         await ip2name('1.1.1.1');
       }, /Hostname for 1.1.1.1 does not map back to 1.1.1.1/);
     });
@@ -98,7 +87,7 @@ suite("ip2name", function() {
     test("hostname contains '*'", async function() {
       reverse['1.1.1.1'] = ['*.domain.name'];
       forward['*.domain.name'] = ['1.1.1.1'];
-      await assertRejects(async () => {
+      await helper.assertRejects(async () => {
         await ip2name('1.1.1.1');
       }, /Hostname for 1.1.1.1 is invalid/);
     });
