@@ -9,14 +9,14 @@ suite("ip2name", function() {
   suite("with real DNS:", function() {
     // these depend on actual DNS, so if they break it may be due to changes
     // by whoever owns these IPs, rather than a code issue.
-    test("8.8.8.8", async function() {
+    test("8.8.8.8 (IPv4)", async function() {
       let name = await ip2name('8.8.8.8');
       assert.equal(name, 'google-public-dns-a.google.com');
     });
 
-    test("::ffff:8.8.8.8 (IPv4-translated)", async function() {
-      let name = await ip2name('::ffff:8.8.8.8');
-      assert.equal(name, 'google-public-dns-a.google.com');
+    test("2001:4860:4860::64 (IPv6)", async function() {
+      let name = await ip2name('2001:4860:4860::64');
+      assert.equal(name, 'google-public-dns64-a.google.com');
     });
 
     test("verizon FiOS", async function() {

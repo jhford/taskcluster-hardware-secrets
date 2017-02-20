@@ -1,4 +1,5 @@
 const dns = require('mz/dns');
+const iplib = require('ip');
 
 /**
  * Get the hostname corresponding to the given IP.  This hostname
@@ -8,8 +9,14 @@ const dns = require('mz/dns');
  * address.
  */
 module.exports = async ip => {
-  // if ip is given in IPv4-translated format, strip the prefix.
-  ip = ip.replace(/^::ffff:/, '');
+  let resolve;
+  if (iplib.isV4Format(ip)) {
+    resolve = dns.resolve4;
+  } else if (iplib.isV6Format(ip)){
+    resolve = dns.resolve6;
+  } else {
+    throw new Error('Provided IP is not in ipv4 or v6 format');
+  }
 
   let hostnames = await dns.reverse(ip);
   if (hostnames.length > 1) {
@@ -23,7 +30,7 @@ module.exports = async ip => {
     throw new Error(`Hostname for ${ip} is invalid`);
   }
 
-  let forward = await dns.resolve4(hostname);
+  let forward = await resolve(hostname);
   if (forward.length > 1) {
     throw new Error(`Hostname for ${ip} maps back to several IPs`);
   } else if (forward.length === 0 || forward[0] !== ip) {
