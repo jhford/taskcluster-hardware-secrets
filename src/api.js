@@ -10,20 +10,16 @@ let api = new API({
   description: 'Get Taskcluster credentials based on IP address',
   schemaPrefix: 'http://schemas.taskcluster.net/host-secrets/v1/',
   context: [
-    'allowedIps',
     'scopeBase',
     'credentialsExpire',
     'credentials',
     'ip2name',
+    'ipAllowed',
   ],
   errorCodes: {
     IPNotAllowed: 403,
   },
 });
-
-function isIpAllowed(ip, allowedIps) {
-  return true;
-}
 
 api.declare({
   method: 'get',
@@ -38,15 +34,18 @@ api.declare({
   let ip = req.ip;
   debug(`${ip} is asking for credentials`);
 
-  if (!isIpAllowed(ip, this.allowedIps)) {
+  if (!this.ipAllowed(ip)) {
+    debug(`${ip} is disallowed by IP`);
     return res.reportError('IPNotAllowed', 'Remote IP not allowed', {});
   }
+  debug(`${ip} is allowed by IP`);
 
   let hostname;
   try {
     hostname = await this.ip2name(ip);
   } catch (err) {
     debug(`From ip2name: ${err}`);
+    debug(`${ip} is disallowed by DNS`);
     return res.reportError('IPNotAllowed', 'Remote IP not allowed', {});
   }
   debug(`${ip} translates to ${hostname}`);
@@ -56,14 +55,13 @@ api.declare({
   let scopes = [this.scopeBase + labels.join('.')];
   let start = new Date();
   let tempCred = taskcluster.createTemporaryCredentials({
-    //clientId: <authenticated dns name of machine?>
     clientId: hostname,
     start,
     expiry: taskcluster.fromNow(this.credentialsExpire, start),
     scopes: scopes,
     credentials: this.credentials,
   });
-  debug(`${ip} receives credentials with scopes ${scopes}`);
+  debug(`${ip} (${hostname}) receives credentials with scopes ${scopes}`);
   res.reply({credentials: tempCred});
 });
 

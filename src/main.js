@@ -7,6 +7,7 @@ let monitor = require('taskcluster-lib-monitor');
 let api = require('./api'); 
 let App = require('taskcluster-lib-app');
 let ip2name = require('./ip2name');
+let ipAllowed = require('./ipAllowed');
 
 let load = loader({
   cfg: {
@@ -29,7 +30,7 @@ let load = loader({
     setup: async ({cfg}) => {
       return await validator({
         prefix: 'host-secrets/v1/',
-        aws: cfg.aws,
+        publish: false,
       });
     },
   },
@@ -48,24 +49,25 @@ let load = loader({
     setup: () => ip2name,
   },
 
+  ipAllowed: {
+    requires: ['cfg'],
+    setup: ({cfg}) => ipAllowed(cfg.taskcluster.allowedIps),
+  },
+
   api: {
-    requires: ['cfg', 'validator', 'monitor', 'ip2name'],
-    setup: async ({cfg, validator, monitor, ip2name}) => {
-      let allowedIps = cfg.taskcluster.allowedIps;
-      if (allowedIps.includes(',')) {
-          allowedIps = allowedIps.split(',').map(x => x.trim());
-      }
+    requires: ['cfg', 'validator', 'monitor', 'ip2name', 'ipAllowed'],
+    setup: async ({cfg, validator, monitor, ip2name, ipAllowed}) => {
       let router = await api.setup({
         context: {
           credentials: cfg.taskcluster.credentials,
           scopeBase: cfg.taskcluster.scopeBase,
           credentialsExpire: cfg.taskcluster.credentialsExpire,
-          allowedIps,
+          ipAllowed,
           ip2name,
         },
         validator: validator,
         authBaseUrl: cfg.taskcluster.authBaseUrl,
-        publish: cfg.app.publishMetaData,
+        publish: false,
         baseUrl: cfg.server.publicUrl + '/v1',
         referencePrefix: 'host-secrets/v1/api.json',
         monitor: monitor.prefix('api'),
@@ -80,7 +82,7 @@ if (!module.parent) {
   require('source-map-support').install();
   load(process.argv[2], {
     process: process.argv[2],
-    profile: process.env.NODE_ENV,
+    profile: process.env.DEPLOY_ENV || 'default',
   }).catch(err => {
     console.log(err.stack);
     process.exit(1);

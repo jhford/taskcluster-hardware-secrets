@@ -948,6 +948,11 @@
       "from": "invariant@>=2.2.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/invariant/-/invariant-2.2.1.tgz"
     },
+    "ip": {
+      "version": "1.1.4",
+      "from": "ip@latest",
+      "resolved": "https://registry.npmjs.org/ip/-/ip-1.1.4.tgz"
+    },
     "is-arrayish": {
       "version": "0.2.1",
       "from": "is-arrayish@>=0.2.1 <0.3.0",

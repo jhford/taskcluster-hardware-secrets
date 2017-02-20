@@ -8,6 +8,8 @@ allowed_ips=${TASKCLUSTER_ALLOWED_IPS}
 clientid=${TASKCLUSTER_CLIENT_ID}
 token=${TASKCLUSTER_ACCESS_TOKEN}
 port=${PORT}
+forcessl=${FORCE_SSL:-true}
+trustproxy=${TRUST_PROXY:-false}
 env=${NODE_ENV:-production}
 
 while [ $# -gt 0 ] ; do
@@ -36,6 +38,14 @@ while [ $# -gt 0 ] ; do
       port=$2
       shift 2
       ;;
+    --force-ssl)
+      forcessl=$2
+      shift 2
+      ;;
+    --trust-proxy)
+      trustproxy=$2
+      shift 2
+      ;;
     --env)
       env=$2
       shift 2
@@ -55,8 +65,10 @@ test "$clientid" || misarg --client-id
 test "$token" || misarg --token
 test "$port" || misarg --port
 test "$env" || misarg --env
+test "$trustproxy" || misarg --trustproxy
+test "$forcessl" || misarg --forcessl
 
-export DEBUG="* -aws -babel -superagent -nock* -base:validator -eslint* -express:* -mocha:* -nock:* -body-parse:* -azure:*"
+export DEBUG="host-secrets:*"
 export TASKCLUSTER_SCOPE_BASE=$scope_base
 export TASKCLUSTER_CREDENTIALS_EXPIRE=$expires
 export TASKCLUSTER_ALLOWED_IPS=$allowed_ips
@@ -64,6 +76,8 @@ export TASKCLUSTER_CLIENT_ID=$clientid
 export TASKCLUSTER_ACCESS_TOKEN=$token
 export PORT=$port
 export NODE_ENV=$env
+export TRUST_PROXY=$trustproxy
+export FORCE_SSL=$forcessl
 
 exec $NODE_BIN lib/main server
 

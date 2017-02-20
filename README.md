@@ -47,13 +47,23 @@ cd taskcluster-host-secrets
 npm install
 export TASKCLUSTER_SCOPE_BASE="assume:project:testing-host-secrets:host:"
 export TASKCLUSTER_CREDENTIALS_EXPIRE="1 day"
-export TASKCLUSTER_ALLOWED_IPS="\*"
+export TASKCLUSTER_ALLOWED_IPS="0.0.0.0/0"
 export TASKCLUSTER_CLIENT_ID=<snip>
 export TASKCLUSTER_ACCESS_TOKEN=<snip>
+export FORCE_SSL=true
+export TRUST_PROXY=false
 export PORT=8080
 export NODE_ENV=production
+export DEBUG="host-secrets:*"
 node lib/main server
 ```
+
+Unlike other taskcluster services which automatically publish api references
+and schemas, this service is deployed to potentially many hosts and thus needs
+a way to split deployment environments.  We're using `NODE_ENV` to control
+things around how the environment should work with tools like Express, and
+`DEPLOY_ENV` to pick which section of the `config.yml` or `user-config.yml`
+file to use
 
 ### package.sh Based Deployment
 This script generates a tarball meant to ease deployment on systems which do not
