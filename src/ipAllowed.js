@@ -1,4 +1,4 @@
-const ip = require('ip');
+const ipaddr = require('ipaddr.js');
 const assert = require('assert');
 
 /**
@@ -10,17 +10,21 @@ const assert = require('assert');
 module.exports = function(allowedSubnets) {
   assert(allowedSubnets, 'Must provide allowed subnets in CIDR format');
   assert(Array.isArray(allowedSubnets), 'Allowed subnets must be a list');
-  let subnets = [];
-  for (let subnet of allowedSubnets) {
-    subnets.push(ip.cidrSubnet(subnet));
-  }
-  return function(ip) {
-    // if ip is given in IPv4-translated format, strip the prefix.
-    ip = ip.replace(/^::ffff:/, '');
 
-    // Check each subnet allowed to see if this IP is allowed
+  let subnets = [];
+
+  for (let subnet of allowedSubnets) {
+    subnets.push(ipaddr.parseCIDR(subnet));
+  }
+
+  return function(ip) {
+    // Parse the IP into an IP object
+    ip = ipaddr.parse(ip);
+
+    // Go through the subnets and see if we can match any.  A match means the
+    // ip is in the subnet
     for (let subnet of subnets) {
-      if (subnet.contains(ip)) {
+      if (ip.match(subnet)) {
         return true;
       }
     }

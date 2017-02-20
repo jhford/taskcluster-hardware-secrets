@@ -953,6 +953,11 @@
       "from": "ip@latest",
       "resolved": "https://registry.npmjs.org/ip/-/ip-1.1.4.tgz"
     },
+    "ipaddr.js": {
+      "version": "1.2.0",
+      "from": "ipaddr.js@latest",
+      "resolved": "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.2.0.tgz"
+    },
     "is-arrayish": {
       "version": "0.2.1",
       "from": "is-arrayish@>=0.2.1 <0.3.0",
