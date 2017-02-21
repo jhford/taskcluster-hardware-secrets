@@ -53,10 +53,11 @@ api.declare({
 
   let labels = hostname.split('.');
   labels.reverse();
-  let scopes = [this.scopeBase + labels.join('.')];
+  let reversedHostname = labels.join('.');
+  let scopes = [this.scopeBase + reversedHostname];
   let start = new Date();
   let tempCred = taskcluster.createTemporaryCredentials({
-    clientId: this.clientIdBase + hostname,
+    clientId: this.clientIdBase + reversedHostname,
     start,
     expiry: taskcluster.fromNow(this.credentialsExpire, start),
     scopes: scopes,

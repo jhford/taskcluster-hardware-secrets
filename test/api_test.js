@@ -40,7 +40,7 @@ suite('API', function() {
       helper.overwrites['ip2name'] = async () => 'a.domain.name';
       await helper.startWebServer();
       let res = await helper.hostSecrets.credentials();
-      assert.equal(res.credentials.clientId, 'project/releng/host/a.domain.name');
+      assert.equal(res.credentials.clientId, 'project/releng/host/name.domain.a');
       let cert = JSON.parse(res.credentials.certificate);
       assert.equal(cert.scopes.length, 1);
       assert.equal(cert.scopes[0], 'assume:project:releng:host:name.domain.a');
