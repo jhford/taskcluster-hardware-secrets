@@ -9,19 +9,13 @@ var cfg = config({profile: 'test'});
 var helper = module.exports = {};
 
 helper.overwrites = {};
-helper.load = async (component, overwrite) => {
-  if (overwrite) {
-    helper.overwrites[component] = overwrite;
-  }
-  return await load(component, helper.overwrites);
-}
 
 var webServer = undefined;
 helper.startWebServer = async () => {
   if (webServer) {
     await webServer.terminate();
   }
-  webServer = await helper.load('server');
+  webServer = await load('server', helper.overwrites);
 
   // Create client for working with API
   helper.baseUrl = 'http://localhost:' + webServer.address().port + '/v1';

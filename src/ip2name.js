@@ -1,4 +1,5 @@
 const dns = require('mz/dns');
+const ipaddr = require('ipaddr.js');
 
 /**
  * Get the hostname corresponding to the given IP.  This hostname
@@ -8,8 +9,20 @@ const dns = require('mz/dns');
  * address.
  */
 module.exports = async ip => {
-  // if ip is given in IPv4-translated format, strip the prefix.
-  ip = ip.replace(/^::ffff:/, '');
+  let ipA = ipaddr.parse(ip);
+
+  let resolve;
+
+  switch(ipA.kind()) {
+    case 'ipv4':
+      resolve = dns.resolve4;
+      break;
+    case 'ipv6':
+      resolve = dns.resolve6;
+      break;
+    default:
+      throw new Error('Unrecognized IP format');
+  }
 
   let hostnames = await dns.reverse(ip);
   if (hostnames.length > 1) {
@@ -23,7 +36,7 @@ module.exports = async ip => {
     throw new Error(`Hostname for ${ip} is invalid`);
   }
 
-  let forward = await dns.resolve4(hostname);
+  let forward = await resolve(hostname);
   if (forward.length > 1) {
     throw new Error(`Hostname for ${ip} maps back to several IPs`);
   } else if (forward.length === 0 || forward[0] !== ip) {

@@ -11,25 +11,28 @@ defaults:
   taskcluster:
     authBaseUrl:      https://auth.taskcluster.net/v1
     scopeBase: !env TASKCLUSTER_SCOPE_BASE
+    clientIdBase: !env TASKCLUSTER_CLIENT_ID_BASE
     credentialsExpire: !env TASKCLUSTER_CREDENTIALS_EXPIRE
-    allowedIps: !env TASKCLUSTER_ALLOWED_IPS
-    credentials:      # Load strings from environment variables
-      clientId:       !env TASKCLUSTER_CLIENT_ID
-      accessToken:    !env TASKCLUSTER_ACCESS_TOKEN
+    allowedIps: !env:list TASKCLUSTER_ALLOWED_IPS
+    credentials:
+      clientId: !env TASKCLUSTER_CLIENT_ID
+      accessToken: !env TASKCLUSTER_ACCESS_TOKEN
 
   # Configuration for server
   server:
-    publicUrl:                "https://host-secrets.taskcluster.net"
-    port:                     !env:number PORT
-    env:                      !env NODE_ENV
-    forceSSL:                 !env:bool FORCE_SSL
-    trustProxy:               !env:bool TRUST_PROXY
+    publicUrl: "https://host-secrets.taskcluster.net"
+    port: !env:number PORT
+    env: !env NODE_ENV
+    forceSSL: !env:bool FORCE_SSL
+    trustProxy: !env:bool TRUST_PROXY
 
 development:
   taskcluster:
     scopeBase: "assume:project:testing-host-secrets:host:"
+    clientIdBase: "project/testing-host-secrets/host/"
     credentialsExpire: 1 day
-    allowedIps: '*'
+    allowedIps:
+      - "0.0.0.0/0"
   server:
     forceSSL: false
     trustProxy: true
@@ -47,8 +50,10 @@ production:
 test:
   # overwrite defaults for test
   taskcluster:
-    allowedIps: 1.1.1.1
+    allowedIps:
+      - "0.0.0.0/0"
     scopeBase: 'assume:project:releng:host:'
+    clientIdBase: "project/releng/host/"
     credentialsExpire: '12 hours'
     credentials:
       clientId:       'fake-client-id'
