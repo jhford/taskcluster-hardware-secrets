@@ -17,12 +17,12 @@ suite('API', function() {
       helper.overwrites['ipAllowed'] = () => true;
       helper.overwrites['ip2name'] = async () => Promise.reject('nope');
       await helper.startWebServer();
-      helper.assertRejects(async () => 
+      helper.assertRejects(async () =>
         await helper.hostSecrets.credentials(),
         /IPNotAllowed/
       );
     });
-    
+
     test("where ip is not allowed", async function() {
       helper.overwrites['ipAllowed'] = () => false;
       helper.overwrites['ip2name'] = async () => 'a.domain.name';
@@ -45,9 +45,5 @@ suite('API', function() {
       assert.equal(cert.scopes.length, 1);
       assert.equal(cert.scopes[0], 'assume:project:releng:host:name.domain.a');
     });
-  });
-
-  suite("ip access", function() {
-    
   });
 });
