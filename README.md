@@ -28,11 +28,6 @@ generated for a host with a hostname of `a.test.machine.com` would be
 `assume:project:test:host:com.machine.test.a` and the client id would be
 `project/test/host/com.machine.test.a`.
 
-The role specified in these scopes (`project:testing-host-secrets:host:*`) can
-be given other roles to expand on what they can do.  This includes storing secrets
-using the taskcluster-secrets service.  This credential is used for bootstraping
-and not for generating the final credential to be used by the service.
-
 ## Credentials
 The taskcluster credentials that are to be used with this service must be
 permanent credentials (temporary credentials cannot generate other temporary).
