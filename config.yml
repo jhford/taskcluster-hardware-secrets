@@ -11,6 +11,7 @@ defaults:
   taskcluster:
     authBaseUrl:      https://auth.taskcluster.net/v1
     scopeBase: !env TASKCLUSTER_SCOPE_BASE
+    clientIdBase: !env TASKCLUSTER_CLIENT_ID_BASE
     credentialsExpire: !env TASKCLUSTER_CREDENTIALS_EXPIRE
     allowedIps: !env:list TASKCLUSTER_ALLOWED_IPS
     credentials:
@@ -28,6 +29,7 @@ defaults:
 development:
   taskcluster:
     scopeBase: "assume:project:testing-host-secrets:host:"
+    clientIdBase: "project/testing-host-secrets/host/"
     credentialsExpire: 1 day
     allowedIps:
       - "0.0.0.0/0"
@@ -51,6 +53,7 @@ test:
     allowedIps:
       - "0.0.0.0/0"
     scopeBase: 'assume:project:releng:host:'
+    clientIdBase: "project/releng/host/"
     credentialsExpire: '12 hours'
     credentials:
       clientId:       'fake-client-id'

@@ -3,6 +3,7 @@
 NODE_BIN="<<<NODE_BINARY>>>"
 
 scope_base=${TASKCLUSTER_SCOPE_BASE}
+clientid_base=${TASKCLUSTER_CLIENT_ID_BASE}
 expires=${TASKCLUSTER_CREDENTIALS_EXPIRE}
 allowed_ips=${TASKCLUSTER_ALLOWED_IPS}
 clientid=${TASKCLUSTER_CLIENT_ID}
@@ -16,6 +17,10 @@ while [ $# -gt 0 ] ; do
   case $1 in 
     --scope-base)
       scope_base=$2
+      shift 2
+      ;;
+    --client-id-base)
+      clientid_base=$2
       shift 2
       ;;
     --expires)
@@ -59,6 +64,7 @@ misarg () {
 }
 
 test "$scope_base" || misarg --scope-base
+test "$clientid_base" || misarg --client-id-base
 test "$expires" || misarg --expires
 test "$allowed_ips" || misarg --allowed-ips
 test "$clientid" || misarg --client-id
@@ -70,6 +76,7 @@ test "$forcessl" || misarg --forcessl
 
 export DEBUG="host-secrets:*"
 export TASKCLUSTER_SCOPE_BASE=$scope_base
+export TASKCLUSTER_CLIENT_ID_BASE=$scope_base
 export TASKCLUSTER_CREDENTIALS_EXPIRE=$expires
 export TASKCLUSTER_ALLOWED_IPS=$allowed_ips
 export TASKCLUSTER_CLIENT_ID=$clientid

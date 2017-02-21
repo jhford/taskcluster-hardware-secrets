@@ -11,6 +11,7 @@ let api = new API({
   schemaPrefix: 'http://schemas.taskcluster.net/host-secrets/v1/',
   context: [
     'scopeBase',
+    'clientIdBase',
     'credentialsExpire',
     'credentials',
     'ip2name',
@@ -55,7 +56,7 @@ api.declare({
   let scopes = [this.scopeBase + labels.join('.')];
   let start = new Date();
   let tempCred = taskcluster.createTemporaryCredentials({
-    clientId: hostname,
+    clientId: this.clientIdBase + hostname,
     start,
     expiry: taskcluster.fromNow(this.credentialsExpire, start),
     scopes: scopes,

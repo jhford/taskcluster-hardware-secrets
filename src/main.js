@@ -61,6 +61,7 @@ let load = loader({
         context: {
           credentials: cfg.taskcluster.credentials,
           scopeBase: cfg.taskcluster.scopeBase,
+          clientIdBase: cfg.taskcluster.clientIdBase,
           credentialsExpire: cfg.taskcluster.credentialsExpire,
           ipAllowed,
           ip2name,
