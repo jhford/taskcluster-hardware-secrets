@@ -8,6 +8,7 @@ let api = require('./api');
 let App = require('taskcluster-lib-app');
 let ip2name = require('./ip2name');
 let ipAllowed = require('./ipAllowed');
+let docs = require('taskcluster-lib-docs');
 
 let load = loader({
   cfg: {
@@ -35,8 +36,16 @@ let load = loader({
     },
   },
 
+	docs: {
+		requires: ['cfg'],
+		setup: ({cfg, validator, reference}) => docs.documenter({
+			credentials: cfg.taskcluster.credentials,
+			tier: 'integrations',
+		}),
+	},
+
   server: {
-    requires: ['cfg', 'api'],
+    requires: ['cfg', 'api', 'docs'],
     setup: ({cfg, api}) => {
       let app = App(cfg.server);
       app.use('/v1', api);
