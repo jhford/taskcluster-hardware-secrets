@@ -1,7 +1,18 @@
 defaults:
-  # Example file showing how to write a user-config.yml file that contains
-  # credentials for running tests locally. Notice that user-config.yml is
-  # ignored in .gitignore
-  pulse:
-    username: '...'
-    password: '...'
+  taskcluster:
+    scopeBase: '...'
+    clientIdBase: '...'
+    credentialsExpire: '...'
+    allowedIps:
+      - "0.0.0.0/0"
+      - "0:0:0:0:0:0:0:0/0"
+    credentials:
+      clientId: '...'
+      accessToken: '...'
+
+  server:
+    publicUrl: '...'
+    port: 443
+    env: production
+    forceSSL: true
+    trustProxy: false
