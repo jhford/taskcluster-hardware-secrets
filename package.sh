@@ -27,7 +27,8 @@ tar -f ${NODE_FILENAME} -C $DIST_DIR/$NODEJS_DIR -ax
 cp -r schemas/ test/ src/ package.json config.yml $DIST_DIR
 
 # We want to do the install using the copy we're managing ourself
-export PATH="$PWD/${NODEJS_DIR}/${NODE_DIRNAME}/bin/:$PATH"
+echo "${PWD}/${DIST_DIR}/${NODEJS_DIR}/${NODE_DIRNAME}/bin/"
+export PATH="${PWD}/${DIST_DIR}/${NODEJS_DIR}/${NODE_DIRNAME}/bin/:$PATH"
 (cd $DIST_DIR && ./${NODEJS_DIR}/${NODE_DIRNAME}/bin/npm install .)
 
 # We need to generate the start.sh script using a useful node binary path
