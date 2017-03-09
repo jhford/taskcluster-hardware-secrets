@@ -1,21 +1,21 @@
 #!/bin/bash
 #
-# tchsd
+# host-secrets
 # This shell script takes care of starting and stopping taskcluster-host-secrets
 #
 # chkconfig: - 58 74
-# description: tchsd is the taskcluster-host-secrets daemon.
+# description: host-secrets is the taskcluster-host-secrets daemon.
 
 # Source function library.
 . /etc/init.d/functions
 
-prog=tchsd
+prog=host-secrets
 lockfile=/var/lock/subsys/$prog
-conffile=/etc/tchsd.conf
+conffile=/etc/host-secrets.conf
 
 start() {
   [ "$EUID" != "0" ] && exit 4
-  [ -f /opt/taskcluster-host-secrets/bin/start.sh ] || exit 5
+  [ -f <<<BINDIR>>>/../bin/start.sh ] || exit 5
   [ -f $conffile ] || exit 6
   . $conffile
         # Start daemons.
