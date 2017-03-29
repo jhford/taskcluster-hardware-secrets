@@ -101,4 +101,5 @@ export TRUST_PROXY=$trustproxy
 export FORCE_SSL=$forcessl
 
 cd $bindir/../../code/
+exec 1> >(logger -s -t tc-host-secrets) 2>&1
 exec node lib/main server
