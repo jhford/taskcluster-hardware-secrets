@@ -104,3 +104,17 @@ In addition to the standard environment variables, this wrapper script has the f
 * `--env`: equivalent to `NODE_ENV`
 * `--force-ssl`: equivalent to `FORCE_SSL`
 * `--trust-proxy`: equivalent to `TRUST_PROXY`
+
+### RPM creation
+
+To create an RPM, on a Fedora system (not a Docker image), run
+
+```
+./build-rpm.sh
+```
+
+when that completes successfully, get the final RPM with something like (changing the version number):
+
+```
+mock  -r fedora-25-x86_64 --copyout /builddir/build/RPMS/taskcluster-host-secrets-1.0.2-1.fc25.x86_64.rpm .
+```
