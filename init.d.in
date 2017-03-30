@@ -15,7 +15,7 @@ conffile=/etc/host-secrets.conf
 
 start() {
   [ "$EUID" != "0" ] && exit 4
-  [ -f <<<BINDIR>>>/../bin/start.sh ] || exit 5
+  [ -f <<<BINDIR>>>/../../bin/start.sh ] || exit 5
   [ -f $conffile ] || exit 6
   . $conffile
         # Start daemons.
