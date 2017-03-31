@@ -11,33 +11,54 @@
 
 prog=host-secrets
 lockfile=/var/lock/subsys/$prog
-conffile=/etc/host-secrets.conf
+conffile=/etc/$prog.conf
+
+[ -f $conffile ] || exit 6
+. $conffile
+pid=$(fuser -n tcp $PORT)
 
 start() {
   [ "$EUID" != "0" ] && exit 4
   [ -f <<<BINDIR>>>/../../bin/start.sh ] || exit 5
-  [ -f $conffile ] || exit 6
-  . $conffile
-        # Start daemons.
-        echo -n $"Starting $prog: "
-        daemon $prog $OPTIONS
-  RETVAL=$?
-        echo
-  [ $RETVAL -eq 0 ] && touch $lockfile
-  return $RETVAL
+
+  if [ "$pid" != "" ] && ps -p $pid > /dev/null; then
+    echo -n $"$prog is already running."
+    return 0
+  else
+    echo -n $"Starting $prog: "
+    daemon $prog $OPTIONS
+    exitcode=$?
+    echo
+    [ $exitcode -eq 0 ] && touch $lockfile
+    return $exitcode
+  fi
 }
 
 stop() {
   [ "$EUID" != "0" ] && exit 4
-        echo -n $"Shutting down $prog: "
-  killproc $prog
-  RETVAL=$?
-        echo
-  [ $RETVAL -eq 0 ] && rm -f $lockfile
-  return $RETVAL
+  if [ "$pid" != "" ] && ps -p $pid > /dev/null; then
+    echo -n $"Shutting down $prog: "
+    kill $(fuser -n tcp $PORT)
+    exitcode=$?
+    echo
+    [ $exitcode -eq 0 ] && rm -f $lockfile
+    return $exitcode
+  else
+    echo -n $"$prog is not running."
+    return 0
+  fi
 }
 
-# See how we were called.
+get_status() {
+  if [ "$pid" != "" ] && ps -p $pid > /dev/null; then
+    return 0
+  elif [ -f $lockfile ]; then
+    return 2
+  else
+    return 3
+  fi
+}
+
 case "$1" in
   start)
   start
@@ -46,22 +67,13 @@ case "$1" in
   stop
   ;;
   status)
-  status $prog
+  exit $(get_status)
   ;;
-  restart|force-reload)
+  restart)
   stop
   start
   ;;
-  try-restart|condrestart)
-  if status $prog > /dev/null; then
-      stop
-      start
-  fi
-  ;;
-  reload)
-  exit 3
-  ;;
   *)
-  echo $"Usage: $0 {start|stop|status|restart|try-restart|force-reload}"
+  echo $"Usage: $0 {start|stop|status|restart}"
   exit 2
 esac
