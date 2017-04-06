@@ -107,10 +107,11 @@ The package can be built by running:
 ./build-rpm.sh
 ```
 
-The output of the build process will be located in the `rpmbuild/RPMS`
-subdirectory of the repository clone.  The output will be a non-architecture
-specific source RPM, an architecture specific binary RPM as well as a couple of
-log files of the build process.
+The output of the build process will be located in the `results/` subdirectory
+of the repository clone, in another subdirectory (e.g.
+`results/fedora-25-x86_64`) for the mock environment.  The output will be a
+non-architecture specific source RPM, an architecture specific binary RPM as
+well as a couple of log files of the build process.
 
 The resulting RPM will include an architecture appropriate version of the
 Node.js environment required to run the service as well as the service itself.
