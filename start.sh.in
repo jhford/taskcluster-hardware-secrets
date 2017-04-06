@@ -13,6 +13,7 @@ export NODE_PATH
 echo Starting up taskcluster-host-secrets
 echo Using $($which node) version $(node --version)
 echo Using $($which npm) version $(npm --version)
+echo Using $($which yarn) version $(yarn --version)
 echo Using PATH of "$PATH"
 echo Using NODE_PATH of "$NODE_PATH"
 

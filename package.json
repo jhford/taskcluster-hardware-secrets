@@ -7,8 +7,8 @@
   "scripts": {
     "compile": "babel-compile -p taskcluster src:lib test:.test",
     "test": "mocha .test/*_test.js",
-    "pretest": "npm run compile",
-    "install": "npm run compile",
+    "pretest": "yarn run compile",
+    "install": "yarn run compile",
     "start": "node lib/main server"
   },
   "repository": {
@@ -49,6 +49,6 @@
   },
   "engines": {
     "node": "^6.0.0",
-    "npm": "^3.7.3"
+    "yarn": ">=0.21 <0.22"
   }
 }

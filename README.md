@@ -46,7 +46,7 @@ should provide you with the details you need to integrate into it.
 ``` bash 
 git clone <...>
 cd taskcluster-host-secrets
-npm install
+yarn install
 export TASKCLUSTER_SCOPE_BASE="assume:project:testing-host-secrets:host:"
 export TASKCLUSTER_CLIENT_ID_BASE="project/testing-host-secrets/host/"
 export TASKCLUSTER_CREDENTIALS_EXPIRE="1 day"
