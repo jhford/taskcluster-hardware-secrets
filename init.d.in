@@ -18,6 +18,7 @@ conffile=/etc/$prog.conf
 pid=$(fuser -n tcp $PORT)
 
 start() {
+  [ ! -f $lockfile ] || exit 2
   [ "$EUID" != "0" ] && exit 4
   [ -f <<<BINDIR>>>/../../bin/start.sh ] || exit 5
 
@@ -38,11 +39,15 @@ stop() {
   [ "$EUID" != "0" ] && exit 4
   if [ "$pid" != "" ] && ps -p $pid > /dev/null; then
     echo -n $"Shutting down $prog: "
-    kill $(fuser -n tcp $PORT)
-    exitcode=$?
-    echo
-    [ $exitcode -eq 0 ] && rm -f $lockfile
-    return $exitcode
+    pid=$(fuser -n tcp $PORT)
+    kill $pid
+    while [ -e /proc/$(set -f; echo $pid) ]; do sleep 1; done
+    if [ "$(fuser -n tcp $PORT)" == "" ]; then
+      rm -f $lockfile
+      return 0
+    else
+      return 1
+    fi
   else
     echo -n $"$prog is not running."
     return 0
