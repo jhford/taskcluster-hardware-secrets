@@ -36,13 +36,13 @@ let load = loader({
     },
   },
 
-	docs: {
-		requires: ['cfg'],
-		setup: ({cfg, validator, reference}) => docs.documenter({
-			credentials: cfg.taskcluster.credentials,
-			tier: 'integrations',
-		}),
-	},
+  docs: {
+    requires: ['cfg'],
+    setup: ({cfg, validator, reference}) => docs.documenter({
+      credentials: cfg.taskcluster.credentials,
+      tier: 'integrations',
+    }),
+  },
 
   server: {
     requires: ['cfg', 'api', 'docs'],
