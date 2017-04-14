@@ -1,6 +1,6 @@
 {
   "name": "taskcluster-host-secrets",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "private": true,
   "main": "node lib/server production",
   "license": "MPL-2.0",
