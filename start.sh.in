@@ -101,5 +101,6 @@ export TRUST_PROXY=$trustproxy
 export FORCE_SSL=$forcessl
 
 cd $bindir/../../code/
-exec 1> >(/bin/logger -s -t tc-host-secrets) 2>&1
-exec node lib/main server
+/usr/bin/nohup node lib/main server \
+  2>/var/log/taskcluster-host-secrets.stderr.log \
+  1>/var/log/taskcluster-host-secrets.stdout.log &
