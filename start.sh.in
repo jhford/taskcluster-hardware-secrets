@@ -90,7 +90,7 @@ test "$forcessl" || misarg FORCE_SSL --forcessl
 
 export DEBUG="* -aws -babel -superagent -base:valildator -eslint* -express:* -body-parse:* -azure:*"
 export TASKCLUSTER_SCOPE_BASE=$scope_base
-export TASKCLUSTER_CLIENT_ID_BASE=$scope_base
+export TASKCLUSTER_CLIENT_ID_BASE=$clientid_base
 export TASKCLUSTER_CREDENTIALS_EXPIRE=$expires
 export TASKCLUSTER_ALLOWED_IPS=$allowed_ips
 export TASKCLUSTER_CLIENT_ID=$clientid
