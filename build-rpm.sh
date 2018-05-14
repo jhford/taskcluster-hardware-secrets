@@ -17,8 +17,9 @@ rpmbuild --define "version $VERSION" --define "_topdir $TOPDIR" -bs host-secrets
 rm -rf results/
 mkdir results/
 #for env in epel-6-x86_64 ; do
-for env in fedora-25-x86_64 ; do
+#for env in fedora-{25,28}-x86_64 epel-7-x86_64 ; do
+for env in fedora-28-x86_64 ; do
   rm -rf results/$env
   mkdir results/$env
-  mock --define "version $VERSION" -r $env $TOPDIR/SRPMS/taskcluster-host-secrets*.src.rpm --resultdir results/$env
+  mock --enable-network --define "version $VERSION" -r $env $TOPDIR/SRPMS/taskcluster-host-secrets*.src.rpm --resultdir results/$env
 done

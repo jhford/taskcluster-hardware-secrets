@@ -6,6 +6,7 @@ let taskcluster = require('taskcluster-client');
 let ip2name = require('./ip2name');
 
 let api = new API({
+  name: 'host-secrets',
   title: 'Host Secrets',
   description: 'Get Taskcluster credentials based on IP address',
   schemaPrefix: 'http://schemas.taskcluster.net/host-secrets/v1/',

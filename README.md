@@ -116,12 +116,11 @@ well as a couple of log files of the build process.
 The resulting RPM will include an architecture appropriate version of the
 Node.js environment required to run the service as well as the service itself.
 
-This process reqiures a Fedora 25 system, and cannot run in Docker.  An EC2 instance works well.
-Use AMI ID: Fedora-Cloud-Base-25-20161108.n.1.x86_64-us-east-1-HVM-gp2-0 (ami-0092b117)
+This process reqiures a modern Fedora system, and cannot run in Docker.
 
 ```
-sudo dnf install git /usr/bin/rpmdev-setuptree mock
-sudo usermod -a -G mock fedora
+sudo dnf install git /usr/bin/rpmdev-setuptree mock dnf-utils
+sudo usermod -a -G mock $USER
 git clone https://github.com/taskcluster/taskcluster-host-secrets
 cd taskcluster-host-secrets
 ./build-rpm.sh

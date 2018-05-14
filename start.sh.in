@@ -6,7 +6,7 @@
 
 which=$(which which)
 bindir="<<<BINDIR>>>"
-export PATH="$bindir"
+export PATH="$bindir:$bindir/../../yarn/bin"
 NODE_PATH="$bindir/../lib/node_modules:$bindir/../../code/node_modules"
 export NODE_PATH
 
