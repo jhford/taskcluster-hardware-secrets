@@ -47,7 +47,9 @@ let load = loader({
   server: {
     requires: ['cfg', 'api', 'docs'],
     setup: ({cfg, api}) => {
-      let app = App(cfg.server);
+      let serverCfg = Object.assign({}, cfg.server);
+      serverCfg.rootDocsLink = false;
+      let app = App(serverCfg);
       // convert ipv4-mapped addresses in `req.ip` to normal ipv4 addresses
       app.use(require('express-ipv4')());
       app.use('/v1', api);

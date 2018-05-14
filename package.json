@@ -16,39 +16,39 @@
     "url": "https://github.com/taskcluster/taskcluster-skeleton.git"
   },
   "dependencies": {
-    "assume": "^1.4.1",
+    "assume": "^2.0.1",
     "aws-sdk": "^2.10.0",
     "babel-compile": "^2.0.0",
     "babel-preset-taskcluster": "^3.0.0",
     "babel-runtime": "^6.22.0",
-    "debug": "^2.6.0",
+    "debug": "^3.1.0",
     "express-ipv4": "0.0.1",
     "ip": "^1.1.4",
     "ipaddr.js": "^1.2.0",
     "lodash": "^4.17.4",
     "mz": "^2.6.0",
-    "promise": "^7.1.1",
-    "pulse-publisher": "^1.1.4",
-    "slugid": "^1.1.0",
-    "source-map-support": "^0.4.11",
-    "taskcluster-client": "^1.6.3",
-    "taskcluster-lib-api": "^3.1.0",
-    "taskcluster-lib-app": "^1.0.0",
-    "taskcluster-lib-docs": "^3.3.0",
+    "promise": "^8.0.1",
+    "pulse-publisher": "^3.0.3",
+    "slugid": "^2.0.0",
+    "source-map-support": "^0.5.6",
+    "taskcluster-client": "^4",
+    "taskcluster-lib-api": "^8.3.0",
+    "taskcluster-lib-app": "^4.1.0",
+    "taskcluster-lib-docs": "^4.2.2",
     "taskcluster-lib-iterate": "^1.0.2",
-    "taskcluster-lib-loader": "^1.1.0",
-    "taskcluster-lib-monitor": "^4.3.4",
+    "taskcluster-lib-loader": "^2.0.0",
+    "taskcluster-lib-monitor": "^5.4.0",
     "taskcluster-lib-scopes": "^1.0.0",
-    "taskcluster-lib-testing": "^1.0.3",
-    "taskcluster-lib-validate": "^2.1.0",
-    "typed-env-config": "^1.1.1"
+    "taskcluster-lib-testing": "^3.2.2",
+    "taskcluster-lib-validate": "^3.1.0",
+    "typed-env-config": "^2.0.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
-    "mocha": "^3.0.2"
+    "mocha": "^5.1.1"
   },
   "engines": {
-    "node": "^6.0.0",
-    "yarn": ">=0.21 <0.22"
+    "node": "^10.0.0",
+    "yarn": "^1.6.0"
   }
 }
