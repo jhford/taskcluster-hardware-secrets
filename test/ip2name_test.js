@@ -1,8 +1,8 @@
-import 'mocha';
-import assert from 'assert';
-import ip2name from '../lib/ip2name';
-import dns from 'mz/dns';
-import helper from './helper';
+const mocha = require('mocha');
+const assert = require('assert');
+const ip2name = require('../lib/ip2name');
+const dns = require('mz/dns');
+const helper = require('./helper');
 
 suite("ip2name", function() {
 

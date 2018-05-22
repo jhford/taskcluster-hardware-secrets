@@ -1,7 +1,7 @@
-import 'mocha';
-import assert from 'assert';
-import ipAllowed from '../lib/ipAllowed';
-import helper from './helper';
+const mocha = require('mocha');
+const assert = require('assert');
+const ipAllowed = require('../lib/ipAllowed');
+const helper = require('./helper');
 
 suite('ipAllowed', function() {
   test('allowed by subnet IPv4', function() {

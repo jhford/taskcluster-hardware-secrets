@@ -1,26 +1,20 @@
 {
   "name": "taskcluster-host-secrets",
-  "version": "1.1.2",
+  "version": "2",
   "private": true,
   "main": "node lib/server production",
   "license": "MPL-2.0",
   "scripts": {
-    "compile": "babel-compile -p taskcluster src:lib test:.test",
-    "test": "mocha .test/*_test.js",
-    "pretest": "yarn run compile",
-    "install": "yarn run compile",
+    "test": "mocha test/*_test.js",
     "start": "node lib/main server"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/taskcluster/taskcluster-skeleton.git"
+    "url": "https://github.com/taskcluster/taskcluster-host-secrets.git"
   },
   "dependencies": {
     "assume": "^2.0.1",
     "aws-sdk": "^2.10.0",
-    "babel-compile": "^2.0.0",
-    "babel-preset-taskcluster": "^3.0.0",
-    "babel-runtime": "^6.22.0",
     "debug": "^3.1.0",
     "express-ipv4": "0.0.1",
     "ip": "^1.1.4",
